@@ -3,6 +3,7 @@ import { getFileList } from "../navigation/navigation.js";
 import path from 'node:path';
 import { homedir } from "../path/path.js";
 import { addFile, copyFile, deleteFile, moveFile, readFile, renameFile } from "../basic/basic.js";
+import { compressFile, decompressFile } from "../zip/zip.js";
 
 export const welcomePhrase = `Welcome to the File Manager, ${userName}!`;
 export const exitPhrase = `Thank you for using File Manager, ${userName}!`;
@@ -19,6 +20,8 @@ export const INPUT_COMAND = {
   cp: "cp",
   mv: "mv",
   rm: "rm",
+  compress: "compress",
+  decompress: "decompress",
 }
 
 export let currentDir = homedir;
@@ -92,6 +95,26 @@ export const ACTIONS = {
       console.log(message);
     } else {
       console.log('Please provide a file path to delete.');
+    }
+  },
+  [INPUT_COMAND.compress]: async (dto) => {
+    const { filePath, newFileName } = dto;
+
+    if (filePath && newFileName) {
+      const message = await compressFile(filePath, newFileName);
+      console.log(message);
+    } else {
+      console.log('Please provide both the source file path and the destination path.');
+    }
+  },
+  [INPUT_COMAND.decompress]: async (dto) => {
+    const { filePath, newFileName } = dto;
+
+    if (filePath && newFileName) {
+      const message = await decompressFile(filePath, newFileName);
+      console.log(message);
+    } else {
+      console.log('Please provide both the source file path and the destination path.');
     }
   },
 }

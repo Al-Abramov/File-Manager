@@ -36,7 +36,7 @@ rl.on('line', async (input) => {
         console.log(`Directory not found: ${targetPath}`);
       }
     }
-  
+
     if (ACTIONS[command]) {
       await ACTIONS[command]({
         filePath: commandArgs[0],
