@@ -1,23 +1,53 @@
-import { exitPhrase, INPUT_COMAND, pathPhrase, welcomePhrase } from './src/constants/constants.js';
-import { userName } from './src/cli/args.js';
+import { ACTIONS, currentDir, exitPhrase, INPUT_COMAND, pathPhrase, welcomePhrase } from './src/constants/constants.js';
 import readline from 'node:readline';
-import { __dirname, homedir } from './src/path/path.js';
+import { __dirname } from './src/path/path.js';
 import path from 'node:path';
+import fs from 'node:fs';
 
-// console.log('bbbbbbb');
 const rl = readline.createInterface({
   input: process.stdin,
   output: process.stdout,
 });
 
 process.stdout.write(welcomePhrase + '\n');
+//let currentDir = homedir;
 
-rl.on('line', (input) => {
-  if (input === INPUT_COMAND.exit) {
-    rl.close();
+rl.on('line', async (input) => {
+  const [command, ...commandArgs] = input.split(' ');
+
+  try {
+    if (command === INPUT_COMAND.exit) {
+      rl.close();
+    }
+  
+    if (command === INPUT_COMAND.cd) {
+      const targetPath = commandArgs.join(' ');
+      const newDir = path.isAbsolute(targetPath) ? targetPath : path.join(currentDir, targetPath);
+  
+      try {
+        const stats = await fs.stat(newDir);
+  
+        if (stats.isDirectory()) {
+          currentDir = newDir;
+        } else {
+          console.log(`Not a directory: ${targetPath}`);
+        }
+      } catch (error) {
+        console.log(`Directory not found: ${targetPath}`);
+      }
+    }
+  
+    if (ACTIONS[command]) {
+      await ACTIONS[command]({
+        filePath: commandArgs[0],
+        newFileName: commandArgs[1],
+      });
+    }
+  
+    console.log(pathPhrase(currentDir));
+  } catch (error) {
+    console.error('An error occurred:', error.message);
   }
-
-  console.log(pathPhrase(homedir))
 });
 
 rl.on('close', () => {
