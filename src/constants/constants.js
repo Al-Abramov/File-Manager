@@ -4,6 +4,7 @@ import path from 'node:path';
 import { homedir } from "../path/path.js";
 import { addFile, copyFile, deleteFile, moveFile, readFile, renameFile } from "../basic/basic.js";
 import { compressFile, decompressFile } from "../zip/zip.js";
+import { calculateHash } from "../hash/hash.js";
 
 export const welcomePhrase = `Welcome to the File Manager, ${userName}!`;
 export const exitPhrase = `Thank you for using File Manager, ${userName}!`;
@@ -22,6 +23,7 @@ export const INPUT_COMAND = {
   rm: "rm",
   compress: "compress",
   decompress: "decompress",
+  hash: "hash",
 }
 
 export let currentDir = homedir;
@@ -115,6 +117,16 @@ export const ACTIONS = {
       console.log(message);
     } else {
       console.log('Please provide both the source file path and the destination path.');
+    }
+  },
+  [INPUT_COMAND.hash]: async (dto) => {
+    const { filePath } = dto;
+
+    if (filePath) {
+      const fileHash = await calculateHash(filePath);
+      console.log(`Hash of file ${filePath}: ${fileHash}`);
+    } else {
+      console.log('Please provide a file path to calculate the hash.');
     }
   },
 }
