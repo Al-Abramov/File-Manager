@@ -1,0 +1,25 @@
+{
+  "name": "file-manager",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "main": "index.js",
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Al-Abramov/File-Manager.git"
+  },
+  "keywords": [],
+  "author": "Abramov Alexey",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Al-Abramov/File-Manager/issues"
+  },
+  "homepage": "https://github.com/Al-Abramov/File-Manager#readme"
+}
