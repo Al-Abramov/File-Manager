@@ -5,6 +5,7 @@ import { homedir } from "../path/path.js";
 import { addFile, copyFile, deleteFile, moveFile, readFile, renameFile } from "../basic/basic.js";
 import { compressFile, decompressFile } from "../zip/zip.js";
 import { calculateHash } from "../hash/hash.js";
+import { getCpuArch, getCpus, getEOL, getSystemUserName } from "../system/system.js";
 
 export const welcomePhrase = `Welcome to the File Manager, ${userName}!`;
 export const exitPhrase = `Thank you for using File Manager, ${userName}!`;
@@ -24,9 +25,36 @@ export const INPUT_COMAND = {
   compress: "compress",
   decompress: "decompress",
   hash: "hash",
+  os: "os",
+}
+
+export const OS_ARGS = {
+  EOL: "EOL",
+  cpus: "cpus",
+  homedir: "homedir",
+  username: "username",
+  architecture: "architecture",
 }
 
 export let currentDir = homedir;
+
+export const OS_ACTIONS = {
+  [OS_ARGS.EOL]: async () => {
+    getEOL();
+  },
+  [OS_ARGS.cpus]: () => {
+    getCpus();
+  },
+  [OS_ARGS.homedir]: () => {
+    console.log(`Home directory: ${homedir}`)
+  },
+  [OS_ARGS.username]: () => {
+    getSystemUserName();
+  },
+  [OS_ARGS.architecture]: () => {
+    getCpuArch();
+  },
+}
 
 export const ACTIONS = {
   [INPUT_COMAND.ls]: async () => {
@@ -128,5 +156,21 @@ export const ACTIONS = {
     } else {
       console.log('Please provide a file path to calculate the hash.');
     }
+  },
+  [INPUT_COMAND.os]: async (dto) => {
+    const { arg } = dto;
+    const isCorrectArg = arg.startsWith("--");
+
+    if (isCorrectArg) {
+      const osArg = arg.slice(2);
+      try {
+        OS_ACTIONS[osArg]();
+      } catch (error) {
+        console.log('Wrong arguments!');
+      }
+    } else {
+      console.log('Arguments have to started --');
+    }
+  
   },
 }

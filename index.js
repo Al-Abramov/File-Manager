@@ -3,6 +3,7 @@ import readline from 'node:readline';
 import { __dirname } from './src/path/path.js';
 import path from 'node:path';
 import fs from 'node:fs';
+import os from 'os';
 
 const rl = readline.createInterface({
   input: process.stdin,
@@ -41,6 +42,7 @@ rl.on('line', async (input) => {
       await ACTIONS[command]({
         filePath: commandArgs[0],
         newFileName: commandArgs[1],
+        arg: commandArgs[0],
       });
     }
   
